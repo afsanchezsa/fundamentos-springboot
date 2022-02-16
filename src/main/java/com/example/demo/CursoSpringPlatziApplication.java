@@ -10,6 +10,7 @@ import com.example.demo.bean.MyBean;
 import com.example.demo.bean.MyBeanWithDependency;
 import com.example.demo.bean.MyBeanWithProperties;
 import com.example.demo.component.ComponentDependency;
+import com.example.demo.pojo.UserPojo;
 
 @SpringBootApplication
 public class CursoSpringPlatziApplication implements CommandLineRunner{
@@ -17,15 +18,17 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 	private MyBean mybean;
 	private MyBeanWithDependency beanWithDependency;
 	private MyBeanWithProperties beanWithProperties;
-
+	private UserPojo userPojo;
 	@Autowired
 	public CursoSpringPlatziApplication(@Qualifier("componentTwoImplement")ComponentDependency componentDependency,
 			MyBean mybean,MyBeanWithDependency beanWithDependency,
-			MyBeanWithProperties beanWithProperties) {
+			MyBeanWithProperties beanWithProperties,
+			UserPojo userPojo) {
 		this.componentDependency=componentDependency;
 		this.mybean=mybean;
 		this.beanWithDependency=beanWithDependency;
 		this.beanWithProperties=beanWithProperties;
+		this.userPojo=userPojo;
 	}
 	
 	
@@ -40,7 +43,7 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		this.mybean.print();
 		this.beanWithDependency.printWithDependency();
 		System.out.println(this.beanWithProperties.function());
-		
+		System.out.println(this.userPojo.getEmail()+" "+this.userPojo.getPassword());
 		
 	}
 	
