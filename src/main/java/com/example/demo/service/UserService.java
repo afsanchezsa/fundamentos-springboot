@@ -33,6 +33,30 @@ public class UserService {
 		return this.userRepository.findAll();
 	}
 	
+	public User save(User newUser) {
+		return this.userRepository.save(newUser);
+	}
+
+	public void delete(Long id) {
+		this.userRepository.delete(new User(id));
+		
+	}
+
+	public User update(User newUser, Long id) {
+		// TODO Auto-generated method stub
+		return this.userRepository.findById(id)
+		.map(
+				user->{
+			user.setEmail(newUser.getEmail());
+			user.setBirthDate(newUser.getBirthDate());
+			user.setName(newUser.getName());
+			return this.userRepository.save(user);
+		}).orElse(null);
+		
+		
+		
+	}
+	
 	
 
 }
