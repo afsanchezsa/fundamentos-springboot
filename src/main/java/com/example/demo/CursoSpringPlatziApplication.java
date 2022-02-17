@@ -1,5 +1,9 @@
 package com.example.demo;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,9 @@ import com.example.demo.bean.MyBean;
 import com.example.demo.bean.MyBeanWithDependency;
 import com.example.demo.bean.MyBeanWithProperties;
 import com.example.demo.component.ComponentDependency;
+import com.example.demo.entity.User;
 import com.example.demo.pojo.UserPojo;
+import com.example.demo.repository.UserRepository;
 
 @SpringBootApplication
 public class CursoSpringPlatziApplication implements CommandLineRunner{
@@ -24,16 +30,19 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 	private MyBeanWithDependency beanWithDependency;
 	private MyBeanWithProperties beanWithProperties;
 	private UserPojo userPojo;
+	private UserRepository userRepository;
 	@Autowired
 	public CursoSpringPlatziApplication(@Qualifier("componentTwoImplement")ComponentDependency componentDependency,
 			MyBean mybean,MyBeanWithDependency beanWithDependency,
 			MyBeanWithProperties beanWithProperties,
-			UserPojo userPojo) {
+			UserPojo userPojo,
+			UserRepository userRepository) {
 		this.componentDependency=componentDependency;
 		this.mybean=mybean;
 		this.beanWithDependency=beanWithDependency;
 		this.beanWithProperties=beanWithProperties;
 		this.userPojo=userPojo;
+		this.userRepository=userRepository;
 	}
 	
 	
@@ -44,6 +53,20 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
+		
+		//ejemplosAnteriores();
+		saveUsersInDb();
+		
+	}
+	
+	private void saveUsersInDb() {
+		User u1 =new User("Andres", "andres@mail.com", LocalDate.of( 2021, 10, 10));
+		User u2 =new User("Felipe", "andres@mail.com", LocalDate.of( 2021, 11, 11));
+		List<User> list=Arrays.asList(u1,u2);
+		list.stream().forEach(userRepository::save);
+	}
+	
+	private void ejemplosAnteriores() {
 		this.componentDependency.saludar();
 		this.mybean.print();
 		this.beanWithDependency.printWithDependency();
@@ -55,7 +78,6 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		}catch(Exception e) {
 			LOGGER.error("Esto es un error");	
 		}
-		
 		
 	}
 	
