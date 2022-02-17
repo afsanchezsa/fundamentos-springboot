@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Sort;
 
 import com.example.demo.bean.MyBean;
 import com.example.demo.bean.MyBeanWithDependency;
@@ -56,16 +57,26 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		
 		//ejemplosAnteriores();
 		saveUsersInDb();
+		getUserJPQL();
 		
 	}
 	
 	private void saveUsersInDb() {
 		User u1 =new User("Andres", "andres@mail.com", LocalDate.of( 2021, 10, 10));
-		User u2 =new User("Felipe", "andres@mail.com", LocalDate.of( 2021, 11, 11));
+		User u2 =new User("Felipe", "felipe@mail.com", LocalDate.of( 2021, 11, 11));
 		List<User> list=Arrays.asList(u1,u2);
 		list.stream().forEach(userRepository::save);
 	}
+	private void getUserJPQL() {
+		LOGGER.info("usuario encontrado"+
+		this.userRepository.findByUserEmail("andres@mail.com")
+		.orElseThrow(()->new RuntimeException("usuario no encontrado")));
+		
+		this.userRepository.findAndSort("Feli", Sort.by("id").descending())
+		.stream()
+		.forEach(user -> LOGGER.info("usuario con metodo sort"+ user));
 	
+	}
 	private void ejemplosAnteriores() {
 		this.componentDependency.saludar();
 		this.mybean.print();
