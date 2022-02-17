@@ -7,8 +7,10 @@ import java.util.Optional;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.demo.dto.UserDTO;
 import com.example.demo.entity.User;
 
 @Repository
@@ -30,4 +32,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<User> findByBirthDateBetween(LocalDate begin,LocalDate end);
 	
 	List<User> findByNameLikeOrderByIdDesc(String name);
+	
+	@Query("SELECT new com.example.demo.dto.UserDTO(u.id,u.name,u.birthDate)"+
+	"FROM User u "+
+	"WHERE u.birthDate=:parametroFecha "+
+	"and u.email=:parametroEmail")
+	Optional<UserDTO> getAllByBirthDateAndEmail(@Param("parametroFecha")LocalDate date,
+												@Param("parametroEmail")String email);
 }

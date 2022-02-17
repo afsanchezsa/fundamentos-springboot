@@ -102,6 +102,8 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		.stream()
 		.forEach(user ->LOGGER.info("like and ordered :"+user) );
 		
+		LOGGER.info("QUERY CON NAMED PARAMETERS:"+this.userRepository.getAllByBirthDateAndEmail(LocalDate.of(2021, 10, 10),"andres@mail.com")
+		.orElseThrow(()-> new RuntimeException("error en named parameters")));
 		
 	
 	}
