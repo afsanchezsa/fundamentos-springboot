@@ -20,6 +20,7 @@ import com.example.demo.component.ComponentDependency;
 import com.example.demo.entity.User;
 import com.example.demo.pojo.UserPojo;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.UserService;
 
 @SpringBootApplication
 public class CursoSpringPlatziApplication implements CommandLineRunner{
@@ -32,18 +33,21 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 	private MyBeanWithProperties beanWithProperties;
 	private UserPojo userPojo;
 	private UserRepository userRepository;
+	private UserService userService;
 	@Autowired
 	public CursoSpringPlatziApplication(@Qualifier("componentTwoImplement")ComponentDependency componentDependency,
 			MyBean mybean,MyBeanWithDependency beanWithDependency,
 			MyBeanWithProperties beanWithProperties,
 			UserPojo userPojo,
-			UserRepository userRepository) {
+			UserRepository userRepository,
+			UserService userService) {
 		this.componentDependency=componentDependency;
 		this.mybean=mybean;
 		this.beanWithDependency=beanWithDependency;
 		this.beanWithProperties=beanWithProperties;
 		this.userPojo=userPojo;
 		this.userRepository=userRepository;
+		this.userService=userService;
 	}
 	
 	
@@ -58,6 +62,7 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		//ejemplosAnteriores();
 		saveUsersInDb();
 		getUserJPQL();
+		saveWithErrorTransactional();
 		
 	}
 	
@@ -107,6 +112,25 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		
 	
 	}
+	
+	private void saveWithErrorTransactional() {
+		User u1=new User("pepe","pepe@mail.co",LocalDate.now());
+		User u2=new User("pepe1","pepe1@mail.co",LocalDate.now());
+		User u3=new User("pepe2","pepe@mail.co",LocalDate.now());
+		User u4=new User("pepe3","pepe3@mail.co",LocalDate.now());
+		List<User>users=Arrays.asList(u1,u2,u3,u4);
+		try {
+			this.userService.saveTransactional(users);	
+		}catch (Exception e) {
+			LOGGER.error("error en metodo transaccional "+e.getMessage());
+			
+		}
+		
+		this.userService.getAllUsers()
+		.stream()
+		.forEach(user->LOGGER.info("ESTE ES EL USUARIO EN EL METODO TRANSACCIONAL "+user));;
+	}
+	
 	private void ejemplosAnteriores() {
 		this.componentDependency.saludar();
 		this.mybean.print();
