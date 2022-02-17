@@ -64,7 +64,8 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 	private void saveUsersInDb() {
 		User u1 =new User("Andres", "andres@mail.com", LocalDate.of( 2021, 10, 10));
 		User u2 =new User("Felipe", "felipe@mail.com", LocalDate.of( 2021, 11, 11));
-		List<User> list=Arrays.asList(u1,u2);
+		User u3 =new User("Felipe Juan", "felipeju@mail.com", LocalDate.of( 2018, 11, 11));
+		List<User> list=Arrays.asList(u1,u2,u3);
 		list.stream().forEach(userRepository::save);
 	}
 	private void getUserJPQL() {
@@ -75,6 +76,13 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		this.userRepository.findAndSort("Feli", Sort.by("id").descending())
 		.stream()
 		.forEach(user -> LOGGER.info("usuario con metodo sort"+ user));
+		
+		this.userRepository.findByName("Felipe")
+		.stream()
+		.forEach(user->LOGGER.info("usuario con query method "+user));
+		
+		LOGGER.info("Usuario con query method es : "+ this.userRepository.findByEmailAndName("andres@mail.com", "Andres")
+		.orElseThrow(()-> new RuntimeException("usuario no encontrado")));
 	
 	}
 	private void ejemplosAnteriores() {
