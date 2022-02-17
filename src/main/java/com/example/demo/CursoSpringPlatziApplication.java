@@ -83,6 +83,26 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		
 		LOGGER.info("Usuario con query method es : "+ this.userRepository.findByEmailAndName("andres@mail.com", "Andres")
 		.orElseThrow(()-> new RuntimeException("usuario no encontrado")));
+		
+		
+		this.userRepository.findByNameLike("%e%")
+		.stream()
+		.forEach(user->LOGGER.info("Usuario findByNameLike "+user));
+		
+		this.userRepository.findByNameOrEmail(null,"felipeju@mail.com")
+		.stream()
+		.forEach(user->LOGGER.info("Usuario findByNameorEmail "+user));
+		
+		
+		this.userRepository.findByBirthDateBetween(LocalDate.of(2015, 1, 1), LocalDate.of(2019, 1, 1))
+		.stream()
+		.forEach(user ->LOGGER.info("between"+user) );
+		
+		this.userRepository.findByNameLikeOrderByIdDesc("%Felipe%")
+		.stream()
+		.forEach(user ->LOGGER.info("like and ordered :"+user) );
+		
+		
 	
 	}
 	private void ejemplosAnteriores() {
