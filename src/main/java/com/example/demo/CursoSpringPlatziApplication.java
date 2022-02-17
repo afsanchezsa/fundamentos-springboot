@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +16,9 @@ import com.example.demo.pojo.UserPojo;
 
 @SpringBootApplication
 public class CursoSpringPlatziApplication implements CommandLineRunner{
+	
+	private final Log LOGGER= LogFactory.getLog(CursoSpringPlatziApplication.class);
+	
 	private ComponentDependency componentDependency;
 	private MyBean mybean;
 	private MyBeanWithDependency beanWithDependency;
@@ -44,6 +49,13 @@ public class CursoSpringPlatziApplication implements CommandLineRunner{
 		this.beanWithDependency.printWithDependency();
 		System.out.println(this.beanWithProperties.function());
 		System.out.println(this.userPojo.getEmail()+" "+this.userPojo.getPassword());
+		
+		try {
+			
+		}catch(Exception e) {
+			LOGGER.error("Esto es un error");	
+		}
+		
 		
 	}
 	
