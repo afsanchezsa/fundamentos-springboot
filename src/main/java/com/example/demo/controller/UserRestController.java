@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.caseuse.CreateUser;
 import com.example.demo.caseuse.DeleteUser;
 import com.example.demo.caseuse.GetUser;
+import com.example.demo.caseuse.GetUserPageable;
 import com.example.demo.caseuse.UpdateUser;
 import com.example.demo.entity.User;
 
@@ -28,14 +30,16 @@ public class UserRestController {
 	private CreateUser createUser;
 	private DeleteUser deleteUser;
 	private UpdateUser updateUser;
+	private GetUserPageable getUserPageable;
 	
 	@Autowired
-	public UserRestController(GetUser getUser,CreateUser createUser,DeleteUser deleteUser, UpdateUser updateUser) {
+	public UserRestController(GetUser getUser,CreateUser createUser,DeleteUser deleteUser, UpdateUser updateUser,GetUserPageable getUserPageable) {
 		
 		this.getUser = getUser;
 		this.createUser=createUser;
 		this.deleteUser=deleteUser;
 		this.updateUser=updateUser;
+		this.getUserPageable=getUserPageable;
 	}
 
 
@@ -60,6 +64,12 @@ public class UserRestController {
 	ResponseEntity <User> replaceUser(@RequestBody User newUser,@PathVariable Long id){
 		return  new ResponseEntity<>(this.updateUser.update(newUser,id),HttpStatus.OK);
 		
+		
+	}
+	
+	@GetMapping("/pageable")
+	List<User> getUserPageable(@RequestParam int page,@RequestParam int size){
+		return this.getUserPageable.getUsersByPage(page, size);
 		
 	}
 	
